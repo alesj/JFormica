@@ -36,6 +36,7 @@ import javax.usb.UsbException;
 import javax.usb.UsbHostManager;
 import javax.usb.UsbHub;
 import javax.usb.UsbInterface;
+import javax.usb.UsbInterfacePolicy;
 import javax.usb.UsbNotActiveException;
 import javax.usb.UsbNotOpenException;
 import javax.usb.UsbPipe;
@@ -76,6 +77,11 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	 * Usb Interface
 	 */
 	private UsbInterface _interface;
+
+    /**
+     * Usb Interface policy
+     */
+	private UsbInterfacePolicy _policy;
 
 	/**
 	 * opened
@@ -133,7 +139,11 @@ public class AntTransceiver extends AbstractAntTransceiver {
 
 	}
 
-	private void doInit(AntDeviceId antId, int deviceNumber) {
+    public void setPolicy(UsbInterfacePolicy _policy) {
+        this._policy = _policy;
+    }
+
+    private void doInit(AntDeviceId antId, int deviceNumber) {
 		UsbServices usbServices = null;
 		UsbHub rootHub;
 
@@ -403,7 +413,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 		try {
 			interfaceLock.lock();
 			if (claim) {
-				_interface.claim();
+				_interface.claim(_policy);
 			} else {
 				if (_interface.isClaimed()) {
 					_interface.release();
